@@ -1,20 +1,23 @@
-import datetime
 import undetected_chromedriver as uc
-from requests import put
-# from selenium import webdriver
 from selenium.webdriver.common.by import By
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.common.keys import Keys
 import time
 import datetime
+from datetime import date
 import random
 import secrets
-from logging import log  # import json file to write to
+today = date.today()
 
-emails_liste = ['vincent.johanness.wagner@gmail.com',
-                'berlin.blacklight@gmail.com'
-                ]
+
+emails_liste = ['collectoradress999@gmail.com']
+'''
+if today.day % 2 == 0:
+  # day is an even number
+  emails_liste = []
+else:
+  # day is an uneven number
+  emails_liste = []
+
+'''
 
 
 def getSecretRandomNumber(min, max):
@@ -24,11 +27,12 @@ def getSecretRandomNumber(min, max):
 wait_after_side_loaded_time = secrets.randbelow(10) + 4
 wait_after_button_clicked_time = getSecretRandomNumber(2, 8)
 wait_after_clicking_email_input_time = getSecretRandomNumber(2, 8)
-wait_after_inputting_email_time = getSecretRandomNumber(2, 8)
+wait_after_inputting_email_time = getSecretRandomNumber(2, 10)
 wait_after_clicking_send_button_time = getSecretRandomNumber(8, 23)
-wait_after_fetching_code_time = getSecretRandomNumber(12, 18)
+wait_after_fetching_code_time = getSecretRandomNumber(12, 18) # 30, 300
 interval_between_digits_input_time = getSecretRandomNumber(1, 3)
 final_wait_time = getSecretRandomNumber(10, 100)
+wait_after_run_time = getSecretRandomNumber(250, 3000)
 
 # random_number = getSecretRandomNumber(3, 21)
 
@@ -192,7 +196,6 @@ while True:
             process2()
             time.sleep(final_wait_time)
             print("--------------------")
-            #print("done with run with: " + str(run_number))
             print("--------------------")
 
             log_file = open("logs.txt", "a")
@@ -201,3 +204,5 @@ while True:
             if not emails_liste:
                 print("All emails have been used, quitting script.")
                 quit()
+            else:
+                time.sleep(wait_after_run_time)

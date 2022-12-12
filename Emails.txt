@@ -12,3 +12,6 @@ berlin.redlight@gmail.com
 vincent.johanness.wagner@gmail.com
 berlin.blacklight@gmail.com
 hamami.fashion@gmail.com
+
+
+lista = ["hamami.fashion@gmail.com"]
