@@ -1,0 +1,11 @@
+12/12:
+-emails created manually - limit reached at 12
+-cookies get deactivated at start
+
+
+
+to come:
+automation for distribution (yet manually)
+
+automation vor vpn change throughout the day (yet manually)
+

@@ -12,51 +12,46 @@ import random
 import secrets
 from logging import log  # import json file to write to
 
-emails_liste = ['collectoradress999+FTest1-111@gmail.com',
-                'collectoradress999+FTest2-111@gmail.com',
-                'collectoradress999+FTest3-111@gmail.com',
-                'collectoradress999+FTest4-111@ygmail.com',
-                'collectoradress999+FTest5-111@gmail.com']
+emails_liste = ['vincent.johanness.wagner@gmail.com',
+                'berlin.blacklight@gmail.com'
+                ]
 
 
 def getSecretRandomNumber(min, max):
     return secrets.randbelow(max - min) + min
 
 
-wait_after_side_loaded_time = getSecretRandomNumber(4, 14)
+wait_after_side_loaded_time = secrets.randbelow(10) + 4
 wait_after_button_clicked_time = getSecretRandomNumber(2, 8)
 wait_after_clicking_email_input_time = getSecretRandomNumber(2, 8)
 wait_after_inputting_email_time = getSecretRandomNumber(2, 8)
 wait_after_clicking_send_button_time = getSecretRandomNumber(8, 23)
 wait_after_fetching_code_time = getSecretRandomNumber(12, 18)
 interval_between_digits_input_time = getSecretRandomNumber(1, 3)
-final_wait_time = getSecretRandomNumber(1, 100)
+final_wait_time = getSecretRandomNumber(10, 100)
 
 # random_number = getSecretRandomNumber(3, 21)
-
-
-# inputs
-driver = uc.Chrome()
-link = "https://poll-maker.com/QDZ9LFGAP"
-verification_email = "x"
-# emails_liste[]
-
-option_button = '//*[@id="qp_main14874138"]/div[2]/div/div[1]/div/span'
-searchbar = "#verify-inp > div.qp_login_social.em > input.qp_verify_em"
-send_mail_button = "#verify-inp > div.qp_login_social.em > div.qp_verify_emb"
-input_code_field = "#verify-inp > div.qp_login_social.em > input.qp_verify_emc"
-
 
 def chrome_options():
     options = uc.ChromeOptions()
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("--disable-extensions")
-    options.add_argument("proxy-server=socks5://")
+    #options.add_argument("proxy-server=socks5://") #no proxy in place yet
     options.add_argument("--headless")
     options.add_argument("--user-data-dir=/Users/jimvincentwagner/Library/Application Support/Google/Chrome/Default")
-
-
 chrome_options()  # instantiating the function
+
+
+
+# inputs
+driver = uc.Chrome(options=chrome_options())
+link = "https://poll-maker.com/QS5246LR4"
+verification_email = "x"
+
+option_button = '//*[@id="qp_main14874138"]/div[2]/div/div[1]/div/span'
+searchbar = "#verify-inp > div.qp_login_social.em > input.qp_verify_em"
+send_mail_button = "#verify-inp > div.qp_login_social.em > div.qp_verify_emb"
+input_code_field = "#verify-inp > div.qp_login_social.em > input.qp_verify_emc"
 
 
 class Foo:
@@ -66,21 +61,29 @@ class Foo:
     def get_link(self):
         self.driver.get(link)
 
-    def click_option_and_enter_email(self):
+
+    def brutkasten_clicker(self):
+
+        choose_team_button = '//*[@id="qp_main14775033"]/div[2]/div/div[8]/div'
+        click_email_input = '#verify-inp > div.qp_login_social.em > input.qp_verify_em'
+        click_send_button = '#verify-inp > div.qp_login_social.em > div.qp_verify_emb'
+
         self.get_link()
         print("site loaded")
         time.sleep(wait_after_side_loaded_time)
-        self.driver.find_element(By.XPATH, option_button).click()
-        print("answer_clicked")  # click A
+        self.driver.find_element(By.XPATH, choose_team_button).click()
+        print("team chosen")
         time.sleep(wait_after_button_clicked_time)
-        self.driver.find_element(By.CSS_SELECTOR, searchbar).click()
-        print("email input clicked")  # click Email Input
-        time.sleep(wait_after_clicking_email_input_time)
-        self.driver.find_element(By.CSS_SELECTOR, searchbar).send_keys(verification_email)
-        print("email put in")  # input Email
-        time.sleep(wait_after_inputting_email_time)
-        self.driver.find_element(By.CSS_SELECTOR, send_mail_button).click()
-        print("answer and email submitted")  # click send
+        #self.driver.find_element(By.CSS_SELECTOR, vote_for_team_button).click()
+        #print("voted")
+        time.sleep(wait_after_button_clicked_time)
+        self.driver.find_element(By.CSS_SELECTOR, click_email_input).click()
+        print("email input clicked")
+        self.driver.find_element(By.CSS_SELECTOR, click_email_input).send_keys(verification_email)
+        print("email inputted")
+        self.driver.find_element(By.CSS_SELECTOR, click_send_button).click()
+        print("send button clicked")
+
 
     @staticmethod
     def fetch_email():
@@ -161,7 +164,7 @@ def write_to_file():
 
 def process1():
     foo = Foo(driver)
-    Foo.click_option_and_enter_email(self=foo)
+    Foo.brutkasten_clicker(self=foo)
 
 
 def process2() -> object:
@@ -174,8 +177,7 @@ def process2() -> object:
 while True:
     for email in emails_liste:
         if len(emails_liste) == 0:
-            print("no more emails in list")
-            driver.close()
+            break
         else:
             verification_email = random.choice(emails_liste)
             print("chose:", verification_email)
@@ -196,3 +198,6 @@ while True:
             log_file = open("logs.txt", "a")
             log_file.write(f"{verification_email}, {mail_caller()}, {datetime.datetime.now()}\n")
             log_file.close()
+            if not emails_liste:
+                print("All emails have been used, quitting script.")
+                quit()
