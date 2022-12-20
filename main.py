@@ -5,19 +5,26 @@ import datetime
 from datetime import date
 import random
 import secrets
+import requests
+
 today = date.today()
 
 
-emails_liste = ['collectoradress999@gmail.com']
-'''
-if today.day % 2 == 0:
-  # day is an even number
-  emails_liste = []
-else:
-  # day is an uneven number
-  emails_liste = []
 
-'''
+emails_liste = [
+
+              "gahran_releasing@simplelogin.com",
+
+
+
+
+
+                ]
+
+
+
+
+
 
 
 def getSecretRandomNumber(min, max):
@@ -32,23 +39,22 @@ wait_after_clicking_send_button_time = getSecretRandomNumber(8, 23)
 wait_after_fetching_code_time = getSecretRandomNumber(12, 18) # 30, 300
 interval_between_digits_input_time = getSecretRandomNumber(1, 3)
 final_wait_time = getSecretRandomNumber(10, 100)
-wait_after_run_time = getSecretRandomNumber(250, 3000)
+wait_after_run_time = getSecretRandomNumber(50, 100)
 
 # random_number = getSecretRandomNumber(3, 21)
+
+
 
 def chrome_options():
     options = uc.ChromeOptions()
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("--disable-extensions")
-    #options.add_argument("proxy-server=socks5://") #no proxy in place yet
-    options.add_argument("--headless")
+    options.add_argument("proxy-server=socks5://") #no proxy in place yet
     options.add_argument("--user-data-dir=/Users/jimvincentwagner/Library/Application Support/Google/Chrome/Default")
-chrome_options()  # instantiating the function
-
 
 
 # inputs
-driver = uc.Chrome(options=chrome_options())
+driver = uc.Chrome()
 link = "https://poll-maker.com/QS5246LR4"
 verification_email = "x"
 
@@ -161,9 +167,6 @@ def mail_caller():
 
 
 ## define function that writes the verification email an the correspoinding code to a file
-def write_to_file():
-    with open("verification_codes.txt", "a") as file:
-        file.write(verification_email + " " + str(mail_caller()) + "\n")
 
 
 def process1():
@@ -175,7 +178,8 @@ def process2() -> object:
     foo = Foo(driver)
     foo.input_code()
     print("code entered")
-
+    current_page = driver.current_url
+    link = current_page
 
 # email loop
 while True:
@@ -199,10 +203,11 @@ while True:
             print("--------------------")
 
             log_file = open("logs.txt", "a")
-            log_file.write(f"{verification_email}, {mail_caller()}, {datetime.datetime.now()}\n")
+            log_file.write(f"{verification_email}, {mail_caller()}, {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')}\n")
             log_file.close()
             if not emails_liste:
                 print("All emails have been used, quitting script.")
                 quit()
             else:
                 time.sleep(wait_after_run_time)
+
